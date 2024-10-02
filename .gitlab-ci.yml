@@ -1,0 +1,50 @@
+stages:
+    - publish
+    - deploy
+
+variables:
+    TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+
+publish-prod:
+    image: docker:latest
+    stage: publish
+    services:
+        - docker:dind
+    script:
+        - docker build -t $TAG_LATEST --build-arg ENV=prod .
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+        - docker push $TAG_LATEST
+    environment:
+        name: production
+        url: https://linkup.direct
+    only:
+        - main
+
+deploy-api-prod:
+    stage: deploy
+    image: alpine:latest
+    before_script:
+        - chmod og= $PROD_DEPL_USR_PRIV_KEY
+        - apk update && apk add openssh-client
+    script:
+        - ssh -i $PROD_DEPL_USR_PRIV_KEY -o StrictHostKeyChecking=no $PROD_DEPL_USR_NAME@$PROD_SERVER_IP "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY; docker pull $TAG_LATEST; cd /srv/linkup-digital/linkup/linkup-platform; docker compose up -d linkup-api; docker image prune -f"
+    environment:
+        name: production
+        url: https://linkup.direct
+    only:
+        - main
+
+deploy-db-prod:
+    stage: deploy
+    image: alpine:latest
+    before_script:
+        - chmod og= $PROD_DEPL_USR_PRIV_KEY
+        - apk update && apk add openssh-client
+    script:
+        - ssh -i $PROD_DEPL_USR_PRIV_KEY -o StrictHostKeyChecking=no $PROD_DEPL_USR_NAME@$PROD_SERVER_IP "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY; docker pull $TAG_LATEST; cd /srv/linkup-digital/linkup/linkup-platform; docker compose up -d linkup-db; docker image prune -f"
+    environment:
+        name: production
+        url: https://linkup.direct
+    only:
+        - main
+    when: manual

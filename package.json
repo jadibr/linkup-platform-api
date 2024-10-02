@@ -1,0 +1,49 @@
+{
+	"name": "linkup-platform-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"run": "node -r dotenv/config ./dist/server.js dotenv_config_path=./.env.dev",
+		"start": "ts-node-dev -r dotenv/config --respawn --transpile-only ./src/server.ts dotenv_config_path=./.env.dev",
+		"build": "tsc",
+		"build:prod": "tsc -p tsconfig.prod.json",
+		"test-harness": "ts-node-dev -r dotenv/config --respawn --transpile-only ./src/test-harness.ts dotenv_config_path=./.env.dev",
+		"test-harness:prod": "ts-node-dev -r dotenv/config --respawn --transpile-only ./src/test-harness.ts dotenv_config_path=./.env.prod"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@gitlab.com/linkup-digital/linkup/linkup-platform/linkup-platform-api.git"
+	},
+	"author": "jake",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://gitlab.com/linkup-digital/linkup/linkup-platform/linkup-platform-api/issues"
+	},
+	"homepage": "https://gitlab.com/linkup-digital/linkup/linkup-platform/linkup-platform-api#readme",
+	"devDependencies": {
+		"@types/bcrypt": "^5.0.0",
+		"@types/cors": "^2.8.14",
+		"@types/express": "^4.17.18",
+		"@types/formidable": "^3.4.4",
+		"@types/jsonwebtoken": "^9.0.3",
+		"@types/nodemailer": "^6.4.11",
+		"dotenv": "^16.3.1",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"bcrypt": "^5.1.1",
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
+		"formidable": "^3.5.1",
+		"helmet": "^7.0.0",
+		"joi": "^17.11.0",
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^7.6.0",
+		"nodemailer": "^6.9.6",
+		"sharp": "^0.32.6",
+		"winston": "^3.11.0",
+		"winston-daily-rotate-file": "^4.7.1"
+	}
+}

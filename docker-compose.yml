@@ -1,0 +1,21 @@
+version : "3.8"
+
+services:
+  linkup-db_dev:
+    image: mongo:7.0.2-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?mongo_root_username_missing}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?mongo_root_password_missing}
+    ports:
+      - "27017:27017"
+    volumes:
+      - type: volume
+        source: mongo-data
+        target: /data/db
+      - type: volume
+        source: mongo-config
+        target: /data/configdb
+
+volumes:
+  mongo-data:
+  mongo-config:
